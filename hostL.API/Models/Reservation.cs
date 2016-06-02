@@ -28,6 +28,5 @@ namespace hostL.API.Models
         public virtual ICollection<Message> Messages { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
 
-
     }
 }

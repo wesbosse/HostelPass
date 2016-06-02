@@ -18,8 +18,7 @@ namespace hostL.API.Models
         public DateTime CreatedDate { get; set; }
 
         // Relationship fields
-        public virtual HostLUser HostLUser { get; set; }
+        public virtual HostLUser Traveller { get; set; }
         public virtual Reservation Reservation { get; set; }
-      
     }
 }

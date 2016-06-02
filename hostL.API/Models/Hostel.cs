@@ -16,8 +16,14 @@ namespace hostL.API.Models
         public string City { get; set; }
         public string State { get; set; }
         public int ZipCode { get; set; }
+        public byte[] Image { get; set; }
+        public string Description { get; set; }
         
         // Relationship fields
         public virtual ICollection<Reservation> Reservations { get; set; }
+        public virtual ICollection<Amenity> Amenities { get; set; }
+        public virtual ICollection<Rating> Ratings { get; set; }
+        public virtual HostLUser HostelOwner { get; set; }
+
     }
 }

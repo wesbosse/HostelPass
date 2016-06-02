@@ -11,5 +11,9 @@ namespace hostL.API.Models
         public virtual ICollection<Reservation> Reservations { get; set; }
         public virtual ICollection<Hostel> Hostels { get; set; }
         public virtual ICollection<Message> Messages { get; set; }
+        public virtual ICollection<Rating> Ratings { get; set; } 
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public bool HostelOwner { get; set; }
     }
 }

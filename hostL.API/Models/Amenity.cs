@@ -10,5 +10,8 @@ namespace hostL.API.Models
         // Primary Key
         public int AmenityId { get; set; }
         public string TextAmenity { get; set; }
+
+        //Relationship Fields
+        public virtual ICollection<Hostel> Hostels { get; set; }
     }
 }
