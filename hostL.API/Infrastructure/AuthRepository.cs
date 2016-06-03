@@ -30,8 +30,8 @@ namespace hostL.API.Infrastructure
                 Email = model.EmailAddress,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                HostelOwner = model.HostelOwner,
-                //potential addition: user role
+                Level = 3,
+                JoinDate = DateTime.Now.Date,
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);

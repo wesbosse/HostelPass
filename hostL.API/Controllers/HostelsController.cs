@@ -18,12 +18,14 @@ namespace hostL.API.Controllers
         private HostLDataContext db = new HostLDataContext();
 
         // GET: api/Hostels
+        [Authorize]
         public IQueryable<Hostel> GetHostels()
         {
             return db.Hostels;
         }
 
         // GET: api/Hostels/5
+        [Authorize]
         [ResponseType(typeof(Hostel))]
         public IHttpActionResult GetHostel(int id)
         {
@@ -37,6 +39,7 @@ namespace hostL.API.Controllers
         }
 
         // PUT: api/Hostels/5
+        [Authorize(Roles = "HostelOwner")]
         [ResponseType(typeof(void))]
         public IHttpActionResult PutHostel(int id, Hostel hostel)
         {

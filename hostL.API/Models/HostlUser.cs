@@ -14,6 +14,7 @@ namespace hostL.API.Models
         public virtual ICollection<Rating> Ratings { get; set; } 
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public bool HostelOwner { get; set; }
+        public byte Level { get; set; }
+        public DateTime JoinDate { get; set; }
     }
 }

@@ -37,7 +37,14 @@ namespace hostL.API.Infrastructure
                 {
                     var token = new ClaimsIdentity(context.Options.AuthenticationType);
                     token.AddClaim(new Claim(ClaimTypes.Name, context.UserName));
-                    token.AddClaim(new Claim(ClaimTypes.Role, "user"));
+                    if(user.HostelOwner == false)
+                    { 
+                        token.AddClaim(new Claim(ClaimTypes.Role, "Traveller"));
+                    }
+                    else
+                    {
+                        token.AddClaim(new Claim(ClaimTypes.Role, "HostelOwner"));
+                    }
 
                     context.Validated(token);
                 }

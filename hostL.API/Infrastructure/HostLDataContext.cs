@@ -15,6 +15,12 @@ namespace hostL.API.Infrastructure
         {
         }
 
+        public static HostLDataContext Create()
+        {
+            return new HostLDataContext();
+        }
+
+
         public IDbSet<Amenity> Amenities { get; set; }
         public IDbSet<Hostel> Hostels { get; set; }
         public IDbSet<Message> Messages { get; set; }

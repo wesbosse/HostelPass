@@ -2,10 +2,12 @@
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
 using Microsoft.Owin.Security.OAuth;
+using Newtonsoft.Json.Serialization;
 using Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Formatting;
 using System.Web;
 using System.Web.Http;
 
@@ -21,6 +23,8 @@ namespace hostL.API
 
             ConfigureOAuth(app);
 
+            ConfigureWebApi(httpConfig);
+
             app.UseCors(CorsOptions.AllowAll);
             app.UseWebApi(config);
 
@@ -34,6 +38,10 @@ namespace hostL.API
             var authenticationOptions = new OAuthBearerAuthenticationOptions();
             app.UseOAuthBearerAuthentication(authenticationOptions);
 
+            // Configure the db context and user manager to use a single instance per request
+            app.CreatePerOwinContext(HostLDataContext.Create);
+            app.CreatePerOwinContext<HostLRoleManager>(HostLRoleManager.Create);
+
             // Setup Authorization
             var authorizationOptions = new OAuthAuthorizationServerOptions
             {
@@ -43,6 +51,13 @@ namespace hostL.API
                 Provider = new HostLAuthorizationServerProvider()
             };
             app.UseOAuthAuthorizationServer(authorizationOptions);
+        }
+        private void ConfigureWebApi(HttpConfiguration config)
+        {
+            config.MapHttpAttributeRoutes();
+
+            var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().First();
+            jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
         }
 
     }

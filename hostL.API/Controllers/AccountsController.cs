@@ -10,12 +10,13 @@ using System.Web.Http;
 
 namespace hostL.API.Controllers
 {
-    public class AccountsController : ApiController
+    [RoutePrefix("api/accounts")]
+    public class AccountsController : BaseApiController
     {
         private AuthRepository _repo = new AuthRepository();
 
         [AllowAnonymous]
-        [Route("api/accounts/register")]
+        [Route("register")]
         public async Task<IHttpActionResult> Register(UserRegistrationModel model)
         {
             if (!ModelState.IsValid)
@@ -26,7 +27,11 @@ namespace hostL.API.Controllers
 
             if (result.Succeeded)
             {
-                return Ok();
+                // Ask Camron  about this line
+                var user = await _repo.FindUser(model.UserName, model.Password);
+                Uri locationHeader = new Uri(Url.Link("GetUserById", new { id = user.Id }));
+
+                return Created(locationHeader, TheModelFactory.Create(user));
             }
             else
             {
@@ -34,10 +39,48 @@ namespace hostL.API.Controllers
                 return BadRequest(string.Join(",", result.Errors));
             }
         }
+
         protected override void Dispose(bool disposing)
         {
             _repo.Dispose();
         }
 
+        [Route("users")]
+        public IHttpActionResult GetUsers()
+        {
+            return Ok(this.HostLUserManager.Users.ToList().Select(u => this.TheModelFactory.Create(u)));
+        }
+
+        [Route("user/{id:guid}", Name = "GetUserById")]
+        public async Task<IHttpActionResult> GetUser(string Id)
+        {
+            var HostLUser = await this.HostLUserManager.FindByIdAsync(Id);
+
+            if (HostLUser != null)
+            {
+                return Ok(this.TheModelFactory.Create(HostLUser));
+            }
+
+            return NotFound();
+
+        }
+
+        [Route("user/{username}")]
+        public async Task<IHttpActionResult> GetUserByName(string username)
+        {
+            var user = await this.HostLUserManager.FindByNameAsync(username);
+
+            if (user != null)
+            {
+                return Ok(this.TheModelFactory.Create(user));
+            }
+
+            return NotFound();
+
+        }
     }
+
 }
+
+
+

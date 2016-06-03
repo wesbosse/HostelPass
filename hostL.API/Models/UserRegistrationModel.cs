@@ -31,6 +31,6 @@ namespace hostL.API.Models
         public string LastName { get; set; }
 
         [Required]
-        public bool HostelOwner { get; set; }
+        public byte Level { get; set; }
     }
 }

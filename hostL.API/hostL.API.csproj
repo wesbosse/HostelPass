@@ -178,9 +178,11 @@
     <Compile Include="Controllers\PaymentsController.cs" />
     <Compile Include="Controllers\RatingsController.cs" />
     <Compile Include="Controllers\ReservationsController.cs" />
+    <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Infrastructure\AuthRepository.cs" />
     <Compile Include="Infrastructure\HostLAuthorizationServerProvider.cs" />
     <Compile Include="Infrastructure\HostLDataContext.cs" />
+    <Compile Include="Infrastructure\HostLRoleManager.cs" />
     <Compile Include="Migrations\201606021915577_InitialCreate.cs" />
     <Compile Include="Migrations\201606021915577_InitialCreate.Designer.cs">
       <DependentUpon>201606021915577_InitialCreate.cs</DependentUpon>
@@ -195,12 +197,15 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Amenity.cs" />
+    <Compile Include="Models\BaseApiController.cs" />
     <Compile Include="Models\Hostel.cs" />
     <Compile Include="Models\HostLUser.cs" />
     <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\ModelFactory.cs" />
     <Compile Include="Models\Payment.cs" />
     <Compile Include="Models\Rating.cs" />
     <Compile Include="Models\Reservation.cs" />
+    <Compile Include="Models\HostLUserManager.cs" />
     <Compile Include="Models\UserRegistrationModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
