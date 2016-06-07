@@ -169,6 +169,10 @@
     <Compile Include="Migrations\201606071834074_initial.Designer.cs">
       <DependentUpon>201606071834074_initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201606071959154_removedByteArray.cs" />
+    <Compile Include="Migrations\201606071959154_removedByteArray.Designer.cs">
+      <DependentUpon>201606071959154_removedByteArray.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Amenity.cs" />
@@ -194,6 +198,9 @@
     <EmbeddedResource Include="Migrations\201606071834074_initial.resx">
       <DependentUpon>201606071834074_initial.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606071959154_removedByteArray.resx">
+      <DependentUpon>201606071959154_removedByteArray.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -17,7 +17,6 @@ namespace AspNetIdentity.WebApi.Models
         public string City { get; set; }
         public string State { get; set; }
         public int ZipCode { get; set; }
-        public byte[] Image { get; set; }
         public string Description { get; set; }
 
         // Relationship fields

@@ -99,6 +99,7 @@ namespace AspNetIdentity.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
+            hostel.UserId = User.Identity.GetUserId();
             db.Hostels.Add(hostel);
             db.SaveChanges();
 
