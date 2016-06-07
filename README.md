@@ -1,33 +1,3 @@
-Synopsis
-
-At the top of the file there should be a short introduction and/ or overview that explains what the project is. This description should match descriptions added for package managers (Gemspec, package.json, etc.)
-
-Code Example
-
-Show what the library does as concisely as possible, developers should be able to figure out how your project solves their problem by looking at the code example. Make sure the API you are showing off is obvious, and that your code is short and concise.
-
-Motivation
-
-A short description of the motivation behind the creation and maintenance of the project. This should explain why the project exists.
-
-Installation
-
-Provide code examples and explanations of how to get the project.
-
-API Reference
-
-Depending on the size of the project, if it is small and simple enough the reference docs can be added to the README. For medium size to larger projects it is important to at least provide a link to where the API reference docs live.
-
-Tests
-
-Describe and show how to run the tests with code examples.
-
-Contributors
-
-Let people know how they can dive into the project, include important links to things like issue trackers, irc, twitter accounts if applicable.
-
-License
-
-A short snippet describing the license (MIT, Apache, etc.)
-
-cameron is coo
+Tutorial for Building Simple Membership System using ASP.NET Identity 2.1, ASP.NET Web API, and AngularJS 
+===============
+Tutorial which will cover how to integrate ASP.NET Identity system with ASP.NET Web API. In this tutorial we'll build a secure HTTP service which acts as back-end for SPA front-end built using AngularJS, it should cover in a simple way different ASP.NET Identity 2.1 features such as: Accounts managements, roles management, email confirmations, change password, roles based authorization, claims based authorization, brute force protection.
