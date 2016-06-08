@@ -1,20 +1,28 @@
-﻿using AspNetIdentity.WebApi.Infrastructure;
+﻿using AspNetIdentity.Core.Infrastructure;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.AspNet.Identity;
-using AspNetIdentity.WebApi.Models;
 
 namespace AspNetIdentity.WebApi.Providers
 {
     public class CustomOAuthProvider : OAuthAuthorizationServerProvider
     {
+        private Func<IAuthorizationRepository> _authRepositoryFactory;
+        private IAuthorizationRepository _authorizationRepository
+        {
+            get
+            {
+                return _authRepositoryFactory.Invoke();
+            }
+        }
+
+        public CustomOAuthProvider(Func<IAuthorizationRepository> authRepositoryFactory)
+        {
+            _authRepositoryFactory = authRepositoryFactory;
+        }
 
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
@@ -29,10 +37,7 @@ namespace AspNetIdentity.WebApi.Providers
 
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
 
-            var userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
-            var roleManager = context.OwinContext.GetUserManager<ApplicationRoleManager>();
-
-            HostLUser user = await userManager.FindAsync(context.UserName, context.Password);
+            var user = await _authorizationRepository.FindUser(context.UserName, context.Password);
 
             if (user == null)
             {
@@ -40,23 +45,11 @@ namespace AspNetIdentity.WebApi.Providers
                 return;
             }
 
-            if (!user.EmailConfirmed)
+            var token = new ClaimsIdentity(context.Options.AuthenticationType);
+            token.AddClaim(new Claim(ClaimTypes.Name, context.UserName));
+            foreach (var role in user.Roles)
             {
-                context.SetError("invalid_grant", "User did not confirm email.");
-                return;
-            }
-
-            ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager, "JWT");
-
-            //TODO: Potential bug - not sure if roleManager.Roles gets the roles from the DB..
-            string[] potentialRoles = roleManager.Roles.Select(r => r.Name).ToArray();
-
-            foreach (var potentialRole in potentialRoles)
-            {
-                if (userManager.IsInRole(user.Id, potentialRole))
-                {
-                    oAuthIdentity.AddClaim(new Claim(ClaimTypes.Role, potentialRole));
-                }
+                token.AddClaim(new Claim(ClaimTypes.Role, role.Role.Name));
             }
 
             var authenticationProperties = new AuthenticationProperties(new Dictionary<string, string>()
@@ -68,7 +61,7 @@ namespace AspNetIdentity.WebApi.Providers
                 { "rating", user.Ratings.Average(r => r.AverageRating).ToString() }      */          
             });
            
-            var ticket = new AuthenticationTicket(oAuthIdentity, authenticationProperties);
+            var ticket = new AuthenticationTicket(token, authenticationProperties);
             
             context.Validated(ticket);
            

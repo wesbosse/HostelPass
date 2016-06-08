@@ -1,29 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+﻿using AspNetIdentity.Core.Domain;
+using AspNetIdentity.Core.Infrastructure;
+using AspNetIdentity.Core.Repository;
+using System;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
-using AspNetIdentity.WebApi.Infrastructure;
-using AspNetIdentity.WebApi.Models;
 
 namespace AspNetIdentity.WebApi.Controllers
 {
     [RoutePrefix("api/amenities")]
-    public class AmenitiesController : ApiController
+    public class AmenitiesController : BaseApiController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly IAmenityRepository _amenityRepository;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public AmenitiesController(IAmenityRepository amenityRepository, IUnitOfWork unitOfWork, IHostLUserRepository userRepository) : base(userRepository)
+        {
+            _amenityRepository = amenityRepository;
+            _unitOfWork = unitOfWork;
+        }
 
         // GET: api/Amenities
         [Authorize]
         [Route("")]
         public IQueryable<Amenity> GetAmenities()
         {
-            return db.Amenities;
+            return _amenityRepository.GetAll();
         }
 
         // GET: api/Amenities/5
@@ -32,7 +35,8 @@ namespace AspNetIdentity.WebApi.Controllers
         [Route("{id:int}")]
         public IHttpActionResult GetAmenity(int id)
         {
-            Amenity amenity = db.Amenities.Find(id);
+            Amenity amenity = _amenityRepository.GetById(id);
+
             if (amenity == null)
             {
                 return NotFound();
@@ -57,13 +61,13 @@ namespace AspNetIdentity.WebApi.Controllers
                 return BadRequest();
             }
 
-            db.Entry(amenity).State = EntityState.Modified;
+            _amenityRepository.Update(amenity);
 
             try
             {
-                db.SaveChanges();
+                _unitOfWork.Commit();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
                 if (!AmenityExists(id))
                 {
@@ -89,8 +93,8 @@ namespace AspNetIdentity.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.Amenities.Add(amenity);
-            db.SaveChanges();
+            _amenityRepository.Add(amenity);
+            _unitOfWork.Commit();
 
             return CreatedAtRoute("DefaultApi", new { id = amenity.AmenityId }, amenity);
         }
@@ -101,30 +105,21 @@ namespace AspNetIdentity.WebApi.Controllers
         [Route("{id:int}")]
         public IHttpActionResult DeleteAmenity(int id)
         {
-            Amenity amenity = db.Amenities.Find(id);
+            Amenity amenity = _amenityRepository.GetById(id);
             if (amenity == null)
             {
                 return NotFound();
             }
 
-            db.Amenities.Remove(amenity);
-            db.SaveChanges();
+            _amenityRepository.Delete(amenity);
+            _unitOfWork.Commit();
 
             return Ok(amenity);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
         private bool AmenityExists(int id)
         {
-            return db.Amenities.Count(e => e.AmenityId == id) > 0;
+            return _amenityRepository.Any(a => a.AmenityId == id);
         }
     }
 }

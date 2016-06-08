@@ -1,18 +1,21 @@
-﻿using AspNetIdentity.WebApi.Infrastructure;
+﻿using AspNetIdentity.Core.Domain;
+using AspNetIdentity.Core.Infrastructure;
+using AspNetIdentity.Core.Repository;
+using AspNetIdentity.Data.Identity;
+using AspNetIdentity.Data.Infrastructure;
+using AspNetIdentity.Data.Repository;
 using AspNetIdentity.WebApi.Providers;
+using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
-using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.DataHandler.Encoder;
-using Microsoft.Owin.Security.Jwt;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
 using Owin;
+using SimpleInjector;
+using SimpleInjector.Extensions.ExecutionContextScoping;
+using SimpleInjector.Integration.WebApi;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Net.Http.Formatting;
-using System.Web;
 using System.Web.Http;
 
 namespace AspNetIdentity.WebApi
@@ -21,60 +24,35 @@ namespace AspNetIdentity.WebApi
     {
         public void Configuration(IAppBuilder app)
         {
-            HttpConfiguration httpConfig = new HttpConfiguration();
+            var container = ConfigureSimpleInjector(app);
+            ConfigureOAuthTokenGeneration(app, container);
 
-            ConfigureOAuthTokenGeneration(app);
-
-            ConfigureOAuthTokenConsumption(app);
-
+            HttpConfiguration httpConfig = new HttpConfiguration
+            {
+                DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container)
+            };
             ConfigureWebApi(httpConfig);
-
             app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
-
-            httpConfig.EnsureInitialized();
-
             app.UseWebApi(httpConfig);
 
         }
 
-        private void ConfigureOAuthTokenGeneration(IAppBuilder app)
+        private void ConfigureOAuthTokenGeneration(IAppBuilder app, Container container)
         {
-            // Configure the db context and user manager to use a single instance per request
-            app.CreatePerOwinContext(ApplicationDbContext.Create);
-            app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
-            app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);
+            Func<IAuthorizationRepository> authRepositoryFactory = container.GetInstance<IAuthorizationRepository>;
 
+            // Configure the db context and user manager to use a single instance per request
             OAuthAuthorizationServerOptions OAuthServerOptions = new OAuthAuthorizationServerOptions()
             {
-                //For Dev enviroment only (on production should be AllowInsecureHttp = false)
                 AllowInsecureHttp = true,
                 TokenEndpointPath = new PathString("/api/token"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
-                Provider = new CustomOAuthProvider(),
-                AccessTokenFormat = new CustomJwtFormat("http://localhost:59822")
+                Provider = new CustomOAuthProvider(authRepositoryFactory)
             };
 
             // OAuth 2.0 Bearer Access Token Generation
             app.UseOAuthAuthorizationServer(OAuthServerOptions);
-        }
-
-        private void ConfigureOAuthTokenConsumption(IAppBuilder app) {
-
-            var issuer = "http://localhost:59822";
-            string audienceId = ConfigurationManager.AppSettings["as:AudienceId"];
-            byte[] audienceSecret = TextEncodings.Base64Url.Decode(ConfigurationManager.AppSettings["as:AudienceSecret"]);
-
-            // Api controllers with an [Authorize] attribute will be validated with JWT
-            app.UseJwtBearerAuthentication(
-                new JwtBearerAuthenticationOptions
-                {
-                    AuthenticationMode = AuthenticationMode.Active,
-                    AllowedAudiences = new[] { audienceId },
-                    IssuerSecurityTokenProviders = new IIssuerSecurityTokenProvider[]
-                    {
-                        new SymmetricKeyIssuerSecurityTokenProvider(issuer, audienceSecret)
-                    }
-                });
+            app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
         }
 
         private void ConfigureWebApi(HttpConfiguration config)
@@ -87,6 +65,40 @@ namespace AspNetIdentity.WebApi
 
             var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().First();
             jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+        }
+
+        private Container ConfigureSimpleInjector(IAppBuilder app)
+        {
+            var container = new Container();
+
+            container.Options.DefaultScopedLifestyle = new ExecutionContextScopeLifestyle();
+
+            container.Register<IDatabaseFactory, DatabaseFactory>(Lifestyle.Scoped);
+            container.Register<IUnitOfWork, UnitOfWork>();
+
+            container.Register<IAmenityRepository, AmenityRepository>();
+            container.Register<IHostelRepository, HostelRepository>();
+            container.Register<IHostLUserRepository, HostLUserRepository>();
+            container.Register<IMessageRepository, MessageRepository>();
+            container.Register<IPaymentRepository, PaymentRepository>();
+            container.Register<IRatingRepository, RatingRepository>();
+            container.Register<IReservationRepository, ReservationRepository>();
+            container.Register<IRoleRepository, RoleRepository>();
+            container.Register<IUserRoleRepository, UserRoleRepository>();
+            container.Register<IUserStore<HostLUser, int>, UserStore>(Lifestyle.Scoped);
+            container.Register<IAuthorizationRepository, AuthorizationRepository>(Lifestyle.Scoped);
+
+            app.Use(async (context, next) =>
+            {
+                using (container.BeginExecutionContextScope())
+                {
+                    await next();
+                }
+            });
+
+            container.Verify();
+
+            return container;
         }
 
     }

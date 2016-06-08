@@ -1,37 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using AspNetIdentity.Core.Domain;
+using AspNetIdentity.Core.Infrastructure;
+using AspNetIdentity.Core.Repository;
+using Microsoft.AspNet.Identity;
+using System;
 using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
-using AspNetIdentity.WebApi.Infrastructure;
-using AspNetIdentity.WebApi.Models;
-using Microsoft.AspNet.Identity;
 
 namespace AspNetIdentity.WebApi.Controllers
 {
 
     [RoutePrefix("api/hostels")]
-    public class HostelsController : ApiController
+    public class HostelsController : BaseApiController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly IHostelRepository _hostelRepository;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public HostelsController(IHostelRepository hostelRepository, IUnitOfWork unitOfWork, IHostLUserRepository userRepository) : base(userRepository)
+        {
+            _hostelRepository = hostelRepository;
+            _unitOfWork = unitOfWork;
+        }
 
         [Route("")]
         [Authorize]
         public IQueryable<Hostel> GetManagedHostel()
         {
-            return db.Hostels.Where(h => h.UserId == User.Identity.GetUserId());
+            return _hostelRepository.Where(h => h.UserId == CurrentUser.Id);
         }
 
         [Route("search")]
         [Authorize]
         public IQueryable<Hostel> GetSearchedHostel(string city)
         {
-            return db.Hostels.Where(h => h.City == city);
+            return _hostelRepository.Where(h => h.City == city);
         }
 
 
@@ -42,7 +46,7 @@ namespace AspNetIdentity.WebApi.Controllers
         [ResponseType(typeof(Hostel))]
         public IHttpActionResult GetHostel(int id)
         {
-            Hostel hostel = db.Hostels.Find(id);
+            Hostel hostel = _hostelRepository.GetById(id);
             if (hostel == null)
             {
                 return NotFound();
@@ -67,13 +71,13 @@ namespace AspNetIdentity.WebApi.Controllers
                 return BadRequest();
             }
 
-            db.Entry(hostel).State = EntityState.Modified;
+            _hostelRepository.Update(hostel);
 
             try
             {
-                db.SaveChanges();
+                _unitOfWork.Commit();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
                 if (!HostelExists(id))
                 {
@@ -99,9 +103,9 @@ namespace AspNetIdentity.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            hostel.UserId = User.Identity.GetUserId();
-            db.Hostels.Add(hostel);
-            db.SaveChanges();
+            hostel.UserId = CurrentUser.Id;
+            _hostelRepository.Add(hostel);
+            _unitOfWork.Commit();
 
             return CreatedAtRoute("DefaultApi", new { id = hostel.HostelId }, hostel);
         }
@@ -112,30 +116,21 @@ namespace AspNetIdentity.WebApi.Controllers
         [ResponseType(typeof(Hostel))]
         public IHttpActionResult DeleteHostel(int id)
         {
-            Hostel hostel = db.Hostels.Find(id);
+            Hostel hostel = _hostelRepository.GetById(id);
             if (hostel == null)
             {
                 return NotFound();
             }
 
-            db.Hostels.Remove(hostel);
-            db.SaveChanges();
+            _hostelRepository.Delete(hostel);
+            _unitOfWork.Commit();
 
             return Ok(hostel);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
         private bool HostelExists(int id)
         {
-            return db.Hostels.Count(e => e.HostelId == id) > 0;
+            return _hostelRepository.Any(e => e.HostelId == id);
         }
     }
 }

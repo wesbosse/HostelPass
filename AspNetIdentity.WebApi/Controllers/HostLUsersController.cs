@@ -1,23 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+﻿using AspNetIdentity.Core.Domain;
+using AspNetIdentity.Core.Infrastructure;
+using AspNetIdentity.Core.Repository;
+using Microsoft.AspNet.Identity;
+using System;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
-using AspNetIdentity.WebApi.Infrastructure;
-using AspNetIdentity.WebApi.Models;
-using Microsoft.AspNet.Identity;
 
 namespace AspNetIdentity.WebApi.Controllers
 {
     [RoutePrefix("api/hostlusers")]
-    public class HostLUsersController : ApiController
+    public class HostLUsersController : BaseApiController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly IUnitOfWork _unitOfWork;
+
+        public HostLUsersController(IHostLUserRepository userRepository, IUnitOfWork unitOfWork) : base(userRepository)
+        {
+            _unitOfWork = unitOfWork;
+        }
 
         // PUT: api/HostLUsers/5
         [Authorize]
@@ -25,7 +26,7 @@ namespace AspNetIdentity.WebApi.Controllers
         [Route("{id:int}")]
         public IHttpActionResult PutHostLUser(HostLUser hostLUser)
         {
-            var id = User.Identity.GetUserId();
+            var id = CurrentUser.Id;
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -36,13 +37,13 @@ namespace AspNetIdentity.WebApi.Controllers
                 return BadRequest();
             }
 
-            db.Entry(hostLUser).State = EntityState.Modified;
+            _userRepository.Update(hostLUser);
 
             try
             {
-                db.SaveChanges();
+                _unitOfWork.Commit();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
                 if (!HostLUserExists(id))
                 {
@@ -57,18 +58,9 @@ namespace AspNetIdentity.WebApi.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        protected override void Dispose(bool disposing)
+        private bool HostLUserExists(int id)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool HostLUserExists(string id)
-        {
-            return db.Users.Count(e => e.Id == id) > 0;
+            return _userRepository.Any(u => u.Id == id);
         }
     }
 }

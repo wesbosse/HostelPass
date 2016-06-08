@@ -1,59 +1,24 @@
-﻿using AspNetIdentity.WebApi.Infrastructure;
-using AspNetIdentity.WebApi.Models;
+﻿using AspNetIdentity.Core.Domain;
+using AspNetIdentity.Core.Repository;
 using Microsoft.AspNet.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Http;
-using System.Net.Http;
-using Microsoft.AspNet.Identity.Owin;
 
 namespace AspNetIdentity.WebApi.Controllers
 {
     public class BaseApiController : ApiController
     {
+        protected readonly IHostLUserRepository _userRepository;
 
-        private ModelFactory _modelFactory;
-        private ApplicationUserManager _AppUserManager = null;
-        private ApplicationRoleManager _AppRoleManager = null;
-
-        protected ApplicationUserManager AppUserManager
+        public BaseApiController(IHostLUserRepository userRepository)
         {
-            get
-            {
-                return _AppUserManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-        }
-        protected ApplicationRoleManager AppRoleManager
-        {
-            get
-            {
-                return _AppRoleManager ?? Request.GetOwinContext().GetUserManager<ApplicationRoleManager>();
-            }
-        }
-
-        public BaseApiController()
-        {
-        }
-
-        protected ModelFactory TheModelFactory
-        {
-            get
-            {
-                if (_modelFactory == null)
-                {
-                    _modelFactory = new ModelFactory(this.Request, this.AppUserManager);
-                }
-                return _modelFactory;
-            }
+            _userRepository = userRepository;
         }
 
         protected HostLUser CurrentUser
         {
             get
             {
-                return AppUserManager.FindByName(User.Identity.Name);
+                return _userRepository.FirstOrDefault(u => u.UserName == User.Identity.Name);
             }
         }
 
