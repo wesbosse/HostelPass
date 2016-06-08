@@ -19,6 +19,7 @@ namespace AspNetIdentity.Core.Domain
         public string ZipCode { get; set; }
         public string Description { get; set; }
         public string Phone { get; set; }
+        public decimal Price { get; set; }
 
         // Relationship fields
         public virtual ICollection<Reservation> Reservations { get; set; }

@@ -68,6 +68,10 @@
     <Compile Include="Migrations\201606081829119_version1Db.Designer.cs">
       <DependentUpon>201606081829119_version1Db.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201606082038053_AddedPriceToHostel.cs" />
+    <Compile Include="Migrations\201606082038053_AddedPriceToHostel.Designer.cs">
+      <DependentUpon>201606082038053_AddedPriceToHostel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\AmenityRepository.cs" />
@@ -96,6 +100,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201606081829119_version1Db.resx">
       <DependentUpon>201606081829119_version1Db.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606082038053_AddedPriceToHostel.resx">
+      <DependentUpon>201606082038053_AddedPriceToHostel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
