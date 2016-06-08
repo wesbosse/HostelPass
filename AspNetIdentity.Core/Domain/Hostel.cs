@@ -18,6 +18,7 @@ namespace AspNetIdentity.Core.Domain
         public string State { get; set; }
         public string ZipCode { get; set; }
         public string Description { get; set; }
+        public string Phone { get; set; }
 
         // Relationship fields
         public virtual ICollection<Reservation> Reservations { get; set; }

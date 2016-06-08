@@ -16,17 +16,21 @@ namespace AspNetIdentity.WebApi.Controllers
             _authorizationRepository = authorizationRepository;
         }
 
-        //[Authorize(Roles="Admin")]
-        //[Route("users")]
-        //public IHttpActionResult GetUsers()
-        //{
-        //    return Ok(_userRepository.GetAll().Select(u => new
-        //    {
-        //        Username = u.UserName,
-        //        FirstName = u.FirstName,
-        //        LastName = u.LastName
-        //    }));
-        //}
+        [AllowAnonymous]
+        [Route("Create")]
+        public async Task<IHttpActionResult> RegisterUser(CreateUserBindingModel userModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _authorizationRepository.Register(userModel);
+
+            var errorResult = GetErrorResult(result);
+
+            return errorResult ?? Ok();
+        }
 
         //[Authorize(Roles = "Admin")]
         //[Route("user/{id:guid}", Name = "GetUserById")]
@@ -61,52 +65,6 @@ namespace AspNetIdentity.WebApi.Controllers
         //}
 
         // POST api/Accounts/RegisterUser
-        [AllowAnonymous]
-        [Route("Create")]
-        public async Task<IHttpActionResult> RegisterUser(CreateUserBindingModel userModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var result = await _authorizationRepository.Register(userModel);
-
-            var errorResult = GetErrorResult(result);
-
-            return errorResult ?? Ok();
-        }
-
-        //[AllowAnonymous]
-        //[Route("create")]
-        //public async Task<IHttpActionResult> CreateUser(CreateUserBindingModel createUserModel)
-        //{
-
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    IdentityResult addUserResult = await _authorizationRepository.Register(createUserModel);
-
-        //    if (!addUserResult.Succeeded)
-        //    {
-        //        return GetErrorResult(addUserResult);
-        //    }
-
-        //    //string code = await this.AppUserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-
-        //    //var callbackUrl = new Uri(Url.Link("ConfirmEmailRoute", new { userId = user.Id, code = code }));
-
-        //    //await this.AppUserManager.SendEmailAsync(user.Id,
-        //    //                                        "Confirm your account",
-        //    //                                        "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
-        //    Uri locationHeader = new Uri(Url.Link("GetUserById", new { id = user.Id }));
-
-        //    return CreatedAt(locationHeader, null);
-
-        //}
 
         //[AllowAnonymous]
         //[HttpGet]
@@ -173,7 +131,7 @@ namespace AspNetIdentity.WebApi.Controllers
         //    }
 
         //    return NotFound();
-          
+
         //}
 
         //[Authorize(Roles="Admin")]
@@ -188,7 +146,7 @@ namespace AspNetIdentity.WebApi.Controllers
         //    {
         //        return NotFound();
         //    }
-            
+
         //    var currentRoles = await this.AppUserManager.GetRolesAsync(appUser.Id);
 
         //    var rolesNotExists = rolesToAssign.Except(this.AppRoleManager.Roles.Select(x => x.Name)).ToArray();

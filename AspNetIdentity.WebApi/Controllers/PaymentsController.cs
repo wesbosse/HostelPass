@@ -12,6 +12,7 @@ using System.Web.Http.Description;
 namespace AspNetIdentity.WebApi.Controllers
 {
     [RoutePrefix("api/payments")]
+    [Authorize]
     public class PaymentsController : BaseApiController
     {
         private readonly IPaymentRepository _paymentRepository;
@@ -24,7 +25,6 @@ namespace AspNetIdentity.WebApi.Controllers
         }
 
         // GET: api/Payments
-        [Authorize]
         [Route("")]
         public IQueryable<Payment> GetPayments()
         {
@@ -45,7 +45,7 @@ namespace AspNetIdentity.WebApi.Controllers
         public IHttpActionResult GetPayment(int id)
         {
             Payment payment = _paymentRepository.GetById(id);
-            if (payment == null)
+            if (payment == null || CurrentUser.Reservations.All(r => r.PaymentId != id))
             {
                 return NotFound();
             }
@@ -54,7 +54,7 @@ namespace AspNetIdentity.WebApi.Controllers
         }
 
         // PUT: api/Payments/5
-        [ResponseType(typeof(void))]
+        /*[ResponseType(typeof(void))]
         [Route("{id:int}")]
         public IHttpActionResult PutPayment(int id, Payment payment)
         {
@@ -87,7 +87,7 @@ namespace AspNetIdentity.WebApi.Controllers
             }
 
             return StatusCode(HttpStatusCode.NoContent);
-        }
+        }*/
 
         // POST: api/Payments
         [ResponseType(typeof(Payment))]
@@ -98,6 +98,10 @@ namespace AspNetIdentity.WebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
+            if (CurrentUser.Reservations.All(r => r.ReservationId != payment.ReservationId))
+            {
+                return BadRequest();
+            }
 
             _paymentRepository.Add(payment);
             _unitOfWork.Commit();
@@ -105,7 +109,7 @@ namespace AspNetIdentity.WebApi.Controllers
             return CreatedAtRoute("DefaultApi", new { id = payment.PaymentId }, payment);
         }
 
-        // DELETE: api/Payments/5
+        /*// DELETE: api/Payments/5
         [ResponseType(typeof(Payment))]
         [Route("{id:int}")]
         public IHttpActionResult DeletePayment(int id)
@@ -120,7 +124,7 @@ namespace AspNetIdentity.WebApi.Controllers
             _unitOfWork.Commit();
 
             return Ok(payment);
-        }
+        }*/
 
         private bool PaymentExists(int id)
         {

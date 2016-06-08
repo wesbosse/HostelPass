@@ -39,7 +39,6 @@ namespace AspNetIdentity.Data.Infrastructure
 
             var result = await _userManager.CreateAsync(user, registration.Password);
 
-            //TODO: Add the Hostel role to this user
             if(user.HostelOwner)
             {
                 _userManager.AddToRole(user.Id, "HostelOwner");
@@ -48,24 +47,6 @@ namespace AspNetIdentity.Data.Infrastructure
             {
                 _userManager.AddToRole(user.Id, "Traveller");
             }
-
-            return result;
-        }
-
-        public async Task<IdentityResult> RegisterTraveller(UserRegistrationModel registration)
-        {
-            var user = new HostLUser
-            {
-                FirstName = registration.FirstName,
-                LastName = registration.LastName,
-                JoinDate = DateTime.Now,
-                UserName = registration.UserName,
-                HostelOwner = registration.HostelOwner
-            };
-
-            var result = await _userManager.CreateAsync(user, registration.Password);
-
-            //TODO: Add the Traveller role to this user
 
             return result;
         }

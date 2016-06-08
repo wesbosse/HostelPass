@@ -1,6 +1,7 @@
+using AspNetIdentity.Core.Domain;
+
 namespace AspNetIdentity.Data.Migrations
 {
-    using Core.Domain;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -20,7 +21,7 @@ namespace AspNetIdentity.Data.Migrations
                 new Role { Name = "HostelOwner" },
                 new Role { Name = "Traveller" });
 
-                context.SaveChanges();
+            context.SaveChanges();
         }
     }
 }

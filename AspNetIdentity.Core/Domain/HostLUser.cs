@@ -25,6 +25,9 @@ namespace AspNetIdentity.Core.Domain
         public string UserName { get; set; }
         public string PasswordHash { get; set; }
         public string SecurityStamp { get; set; }
+        public string Phone { get; set; }
+        public bool EmailConfirmed { get; set; }
+        public bool HostelOwner { get; set; }
 
         [Required]
         [MaxLength(100)]
@@ -42,6 +45,6 @@ namespace AspNetIdentity.Core.Domain
         public virtual ICollection<Message> Messages { get; set; }
         public virtual ICollection<Rating> Ratings { get; set; }
         public virtual ICollection<UserRole> Roles { get; set; }
-        public bool HostelOwner { get; set; }
+        
     }
 }

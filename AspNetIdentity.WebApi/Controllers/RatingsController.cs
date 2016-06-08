@@ -10,6 +10,7 @@ using System.Web.Http.Description;
 namespace AspNetIdentity.WebApi.Controllers
 {
     [RoutePrefix("api/ratings")]
+    [Authorize]
     public class RatingsController : BaseApiController
     {
         private readonly IRatingRepository _ratingRepository;
@@ -44,7 +45,7 @@ namespace AspNetIdentity.WebApi.Controllers
         }
 
         // PUT: api/Ratings/5
-        [ResponseType(typeof(void))]
+        /*[ResponseType(typeof(void))]
         [Route("{id:int}")]
         public IHttpActionResult PutRating(int id, Rating rating)
         {
@@ -77,7 +78,7 @@ namespace AspNetIdentity.WebApi.Controllers
             }
 
             return StatusCode(HttpStatusCode.NoContent);
-        }
+        }*/
 
         // POST: api/Ratings
         [ResponseType(typeof(Rating))]
@@ -89,6 +90,23 @@ namespace AspNetIdentity.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
+            if (CurrentUser.Roles.Any(r => r.Role.Name == "HostelOwner"))
+            {
+                // If none of the hostels reservations are ones made by the user being reviewed
+                if (CurrentUser.Reservations.All(reservation => reservation.UserId != rating.TravellerId))
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                // If none of the Travellers reservations are ones for the Hostel being reviewed
+                if (CurrentUser.Reservations.All(reservation => reservation.HostelId != rating.HostelId))
+                {
+                    return NotFound();
+                }
+            }
+
             _ratingRepository.Add(rating);
             _unitOfWork.Commit();
 
@@ -96,7 +114,7 @@ namespace AspNetIdentity.WebApi.Controllers
         }
 
         // DELETE: api/Ratings/5
-        [ResponseType(typeof(Rating))]
+        /*[ResponseType(typeof(Rating))]
         [Route("{id:int}")]
         public IHttpActionResult DeleteRating(int id)
         {
@@ -110,11 +128,11 @@ namespace AspNetIdentity.WebApi.Controllers
             _unitOfWork.Commit();
 
             return Ok(rating);
-        }
+        }*/
 
-        private bool RatingExists(int id)
+/*        private bool RatingExists(int id)
         {
             return _ratingRepository.Any(e => e.RatingId == id);
-        }
+        }*/
     }
 }

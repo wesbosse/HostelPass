@@ -26,7 +26,7 @@ namespace AspNetIdentity.Data.Migrations
                         Address = c.String(),
                         City = c.String(),
                         State = c.String(),
-                        ZipCode = c.Int(nullable: false),
+                        ZipCode = c.String(),
                         Description = c.String(),
                     })
                 .PrimaryKey(t => t.HostelId)

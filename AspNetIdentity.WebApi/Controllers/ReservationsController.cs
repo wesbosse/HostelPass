@@ -9,6 +9,7 @@ using System.Web.Http.Description;
 
 namespace AspNetIdentity.WebApi.Controllers
 {
+    [Authorize]
     [RoutePrefix("api/ratings")]
     public class ReservationsController : BaseApiController
     {
@@ -22,6 +23,7 @@ namespace AspNetIdentity.WebApi.Controllers
         }
 
         // GET: api/Reservations
+        
         [Route("")]
         public IQueryable<Reservation> GetReservations()
         {
@@ -41,6 +43,20 @@ namespace AspNetIdentity.WebApi.Controllers
         public IHttpActionResult GetReservation(int id)
         {
             Reservation reservation = _reservationRepository.GetById(id);
+            if (CurrentUser.Roles.Any(r => r.Role.Name == "HostelOwner"))
+            {
+                if (CurrentUser.Hostels.All(h => h.HostelId != reservation.HostelId))
+                {
+                    return NotFound();
+                }
+            } else
+            {
+                if (reservation.UserId != CurrentUser.Id)
+                {
+                    return NotFound();
+                }
+            }
+
             if (reservation == null)
             {
                 return NotFound();
@@ -61,7 +77,7 @@ namespace AspNetIdentity.WebApi.Controllers
 
             if (id != reservation.ReservationId)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             _reservationRepository.Update(reservation);

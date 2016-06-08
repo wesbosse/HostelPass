@@ -47,6 +47,7 @@ namespace AspNetIdentity.WebApi.Controllers
         public IHttpActionResult GetHostel(int id)
         {
             Hostel hostel = _hostelRepository.GetById(id);
+
             if (hostel == null)
             {
                 return NotFound();
@@ -65,8 +66,8 @@ namespace AspNetIdentity.WebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            if (id != hostel.HostelId)
+                       
+            if (id != hostel.HostelId || CurrentUser.Hostels.All(h => h.HostelId != id))
             {
                 return BadRequest();
             }
@@ -117,7 +118,7 @@ namespace AspNetIdentity.WebApi.Controllers
         public IHttpActionResult DeleteHostel(int id)
         {
             Hostel hostel = _hostelRepository.GetById(id);
-            if (hostel == null)
+            if (hostel == null || CurrentUser.Hostels.All(h => h.HostelId != id))
             {
                 return NotFound();
             }

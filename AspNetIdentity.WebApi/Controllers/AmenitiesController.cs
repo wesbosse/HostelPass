@@ -30,7 +30,7 @@ namespace AspNetIdentity.WebApi.Controllers
         }
 
         // GET: api/Amenities/5
-        [Authorize]
+        /*[Authorize]
         [ResponseType(typeof(Amenity))]
         [Route("{id:int}")]
         public IHttpActionResult GetAmenity(int id)
@@ -43,10 +43,10 @@ namespace AspNetIdentity.WebApi.Controllers
             }
 
             return Ok(amenity);
-        }
+        }*/
 
         // PUT: api/Amenities/5
-        [Authorize(Roles = "HostelOwner")]
+        /*[Authorize(Roles = "HostelOwner")]
         [ResponseType(typeof(void))]
         [Route("{id:int}")]
         public IHttpActionResult PutAmenity(int id, Amenity amenity)
@@ -56,6 +56,10 @@ namespace AspNetIdentity.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
+            if (amenity.Hostels.)
+            {
+                return BadRequest();
+            }
             if (id != amenity.AmenityId)
             {
                 return BadRequest();
@@ -80,7 +84,7 @@ namespace AspNetIdentity.WebApi.Controllers
             }
 
             return StatusCode(HttpStatusCode.NoContent);
-        }
+        }*/
 
         // POST: api/Amenities
         [Authorize(Roles = "HostelOwner")]
@@ -91,8 +95,7 @@ namespace AspNetIdentity.WebApi.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
-            }
-
+            }          
             _amenityRepository.Add(amenity);
             _unitOfWork.Commit();
 
@@ -100,7 +103,7 @@ namespace AspNetIdentity.WebApi.Controllers
         }
 
         // DELETE: api/Amenities/5
-        [Authorize(Roles = "HostelOwner")]
+        /*[Authorize(Roles = "HostelOwner")]
         [ResponseType(typeof(Amenity))]
         [Route("{id:int}")]
         public IHttpActionResult DeleteAmenity(int id)
@@ -115,7 +118,7 @@ namespace AspNetIdentity.WebApi.Controllers
             _unitOfWork.Commit();
 
             return Ok(amenity);
-        }
+        }*/
 
         private bool AmenityExists(int id)
         {

@@ -60,13 +60,13 @@
     <Compile Include="Infrastructure\Repository.cs" />
     <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="Infrastructure\UserStore.cs" />
-    <Compile Include="Migrations\201606080020167_InitialCreate.cs" />
-    <Compile Include="Migrations\201606080020167_InitialCreate.Designer.cs">
-      <DependentUpon>201606080020167_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201606081642185_InitialCreate.cs" />
+    <Compile Include="Migrations\201606081642185_InitialCreate.Designer.cs">
+      <DependentUpon>201606081642185_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201606080040340_ChangedDataTypes.cs" />
-    <Compile Include="Migrations\201606080040340_ChangedDataTypes.Designer.cs">
-      <DependentUpon>201606080040340_ChangedDataTypes.cs</DependentUpon>
+    <Compile Include="Migrations\201606081829119_version1Db.cs" />
+    <Compile Include="Migrations\201606081829119_version1Db.Designer.cs">
+      <DependentUpon>201606081829119_version1Db.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -91,11 +91,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201606080020167_InitialCreate.resx">
-      <DependentUpon>201606080020167_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201606081642185_InitialCreate.resx">
+      <DependentUpon>201606081642185_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201606080040340_ChangedDataTypes.resx">
-      <DependentUpon>201606080040340_ChangedDataTypes.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201606081829119_version1Db.resx">
+      <DependentUpon>201606081829119_version1Db.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

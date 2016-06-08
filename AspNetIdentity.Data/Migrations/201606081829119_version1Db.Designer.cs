@@ -7,13 +7,13 @@ namespace AspNetIdentity.Data.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class ChangedDataTypes : IMigrationMetadata
+    public sealed partial class version1Db : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ChangedDataTypes));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(version1Db));
         
         string IMigrationMetadata.Id
         {
-            get { return "201606080040340_ChangedDataTypes"; }
+            get { return "201606081829119_version1Db"; }
         }
         
         string IMigrationMetadata.Source

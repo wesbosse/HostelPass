@@ -13,7 +13,7 @@ namespace AspNetIdentity.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201606080020167_InitialCreate"; }
+            get { return "201606081642185_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source
