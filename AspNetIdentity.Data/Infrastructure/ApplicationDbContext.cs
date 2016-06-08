@@ -11,6 +11,7 @@ namespace AspNetIdentity.Data.Infrastructure
         {
             Configuration.ProxyCreationEnabled = false;
             Configuration.LazyLoadingEnabled = false;
+            var ensureDLLIsCopied = System.Data.Entity.SqlServer.SqlProviderServices.Instance;
         }
 
         public static ApplicationDbContext Create()
