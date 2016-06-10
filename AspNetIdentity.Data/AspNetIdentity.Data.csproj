@@ -60,17 +60,13 @@
     <Compile Include="Infrastructure\Repository.cs" />
     <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="Infrastructure\UserStore.cs" />
-    <Compile Include="Migrations\201606081642185_InitialCreate.cs" />
-    <Compile Include="Migrations\201606081642185_InitialCreate.Designer.cs">
-      <DependentUpon>201606081642185_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201606100307228_InitialCreate.cs" />
+    <Compile Include="Migrations\201606100307228_InitialCreate.Designer.cs">
+      <DependentUpon>201606100307228_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201606081829119_version1Db.cs" />
-    <Compile Include="Migrations\201606081829119_version1Db.Designer.cs">
-      <DependentUpon>201606081829119_version1Db.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201606082038053_AddedPriceToHostel.cs" />
-    <Compile Include="Migrations\201606082038053_AddedPriceToHostel.Designer.cs">
-      <DependentUpon>201606082038053_AddedPriceToHostel.cs</DependentUpon>
+    <Compile Include="Migrations\201606100804296_updatedUserWithEmail.cs" />
+    <Compile Include="Migrations\201606100804296_updatedUserWithEmail.Designer.cs">
+      <DependentUpon>201606100804296_updatedUserWithEmail.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -95,14 +91,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201606081642185_InitialCreate.resx">
-      <DependentUpon>201606081642185_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201606100307228_InitialCreate.resx">
+      <DependentUpon>201606100307228_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201606081829119_version1Db.resx">
-      <DependentUpon>201606081829119_version1Db.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201606082038053_AddedPriceToHostel.resx">
-      <DependentUpon>201606082038053_AddedPriceToHostel.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201606100804296_updatedUserWithEmail.resx">
+      <DependentUpon>201606100804296_updatedUserWithEmail.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

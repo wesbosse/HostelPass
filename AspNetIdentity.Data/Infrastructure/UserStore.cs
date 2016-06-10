@@ -197,7 +197,7 @@ namespace AspNetIdentity.Data.Identity
         {
             return Task.Factory.StartNew(() =>
             {
-                return (IList<string>)Db.Roles.Select(r => r.Name).ToList();
+                return (IList<string>)user.Roles.Select(r => r.Role.Name).ToList();
             });
         }
 

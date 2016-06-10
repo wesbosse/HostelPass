@@ -3,6 +3,7 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -55,10 +56,11 @@ namespace AspNetIdentity.WebApi.Providers
             var authenticationProperties = new AuthenticationProperties(new Dictionary<string, string>()
             {
                 { "username", user.UserName },
-                /*{ "name", $"{user.FirstName} {user.LastName}" },
-                { "email", user.Email },
+                { "hostelOwner", user.HostelOwner.ToString() },
+                { "name", $"{user.FirstName} {user.LastName}" },
+                { "email", user.EmailAddress },
                 { "messages", user.Messages.Count.ToString() },
-                { "rating", user.Ratings.Average(r => r.AverageRating).ToString() }      */          
+                { "rating", user.Ratings.Average(r => r.AverageRating).ToString() }                
             });
            
             var ticket = new AuthenticationTicket(token, authenticationProperties);

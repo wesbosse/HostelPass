@@ -1,5 +1,3 @@
-using AspNetIdentity.Core.Domain;
-
 namespace AspNetIdentity.Data.Migrations
 {
     using System;
@@ -16,12 +14,18 @@ namespace AspNetIdentity.Data.Migrations
 
         protected override void Seed(AspNetIdentity.Data.Infrastructure.ApplicationDbContext context)
         {
-            context.Roles.AddOrUpdate(ir => ir.Name,
-                new Role { Name = "Admin" },
-                new Role { Name = "HostelOwner" },
-                new Role { Name = "Traveller" });
+            //  This method will be called after migrating to the latest version.
 
-            context.SaveChanges();
+            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
+            //  to avoid creating duplicate seed data. E.g.
+            //
+            //    context.People.AddOrUpdate(
+            //      p => p.FullName,
+            //      new Person { FullName = "Andrew Peters" },
+            //      new Person { FullName = "Brice Lambson" },
+            //      new Person { FullName = "Rowan Miller" }
+            //    );
+            //
         }
     }
 }

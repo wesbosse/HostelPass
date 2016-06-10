@@ -26,14 +26,13 @@ namespace AspNetIdentity.Core.Domain
         public string PasswordHash { get; set; }
         public string SecurityStamp { get; set; }
         public string Phone { get; set; }
+        public string EmailAddress { get; set; }
         public bool EmailConfirmed { get; set; }
         public bool HostelOwner { get; set; }
 
-        [Required]
         [MaxLength(100)]
         public string FirstName { get; set; }
 
-        [Required]
         [MaxLength(100)]
         public string LastName { get; set; }
 
