@@ -11,6 +11,28 @@
     function listingsController($stateParams, listingsFactory, toastr) {
         var vm = this;
 
+        //Modal Vars
+        vm.address = '';
+        vm.city = '';
+        vm.description = '';
+        vm.hostelName = '';
+        vm.image = '';
+        vm.price = '';
+        vm.state = '';
+        vm.zipCode = '';
+
+        vm.getInfo = function(hostel) {
+            vm.address = hostel.Address;
+            vm.city = hostel.City;
+            vm.description = hostel.Description;
+            vm.hostelName = hostel.HostelName;
+            vm.image = hostel.Image;
+            vm.price = hostel.Price;
+            vm.state = hostel.State;
+            vm.zipCode = hostel.ZipCode;
+        };
+
+
         vm.city = $stateParams.city;
         vm.checkin = $stateParams.checkin;
         vm.checkout = $stateParams.checkout;
@@ -217,5 +239,7 @@
                     toastr.warning("You darn fucked up!");
                 })
         }
+
+
     }
 })();

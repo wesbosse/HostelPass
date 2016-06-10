@@ -1,4 +1,69 @@
-﻿/*#region Override background color theme */
+﻿
+/*Just Modal Things*/
+.modal-body{
+    font-size: 1.3em;
+}
+
+.center {
+    margin-top: 50px;
+}
+
+.modal-header {
+    padding-bottom: 5px;
+}
+
+.modal-footer {
+    padding: 0;
+}
+
+.modal-footer .btn-group button {
+    height: 40px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border: none;
+    border-right: 1px solid #ddd;
+}
+
+.modal-footer .btn-group:last-child > button {
+    border-right: 0;
+}
+
+/*Setting the hovers on the modal buttons*/
+.btn-hover-green:hover{
+background-color: #5CB85C;
+color: white;
+}
+
+.btn-hover-red:hover{
+background-color: #D9534F;
+color: white;
+}
+
+/*center search on smaller screens*/
+.searchGroup {
+    width: 90%;
+    margin: 0 auto;
+    padding-top: 8px;
+}
+
+/*Center search on larger screens*/
+.formGroup {
+    width: 770px;
+    margin: 0 auto;
+    padding-top: 8px;
+}
+
+/*Z-Index for the Modals / calendar*/
+.elevate {
+    z-index: -1;
+}
+
+.behind{
+    z-index: -1;
+}
+
+
+/*#region Override background color theme */
 
 /*For Bootstrap 3*/
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
@@ -549,3 +614,33 @@ a {
 }
 
 /*#endregion */
+/*Center the search xs*/
+.searchGroup {
+    width: 90%;
+    margin: 0 auto;
+    padding-top: 8px;
+}
+
+/*center the search > xs*/
+.formGroup {
+    width: 770px;
+    margin: 0 auto;
+    padding-top: 8px;
+}
+
+/*Makes the Black box under the nav bar*/
+.search {
+    margin-top: 53px;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/*Utility to bring things down*/
+.pulldown {
+    margin-top: 10px;
+}
+
+/*Set a difference between the two sets of places on the homepage*/
+.set {
+    margin-bottom: 70px;
+}
