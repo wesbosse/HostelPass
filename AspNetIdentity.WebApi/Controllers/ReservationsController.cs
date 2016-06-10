@@ -1,28 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+﻿using AspNetIdentity.Core.Domain;
+using AspNetIdentity.Core.Infrastructure;
+using AspNetIdentity.Core.Repository;
+using System;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
-using AspNetIdentity.WebApi.Infrastructure;
-using AspNetIdentity.WebApi.Models;
 
 namespace AspNetIdentity.WebApi.Controllers
 {
+    [Authorize]
     [RoutePrefix("api/ratings")]
-    public class ReservationsController : ApiController
+    public class ReservationsController : BaseApiController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly IReservationRepository _reservationRepository;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public ReservationsController(IReservationRepository reservationRepository, IUnitOfWork unitOfWork, IHostLUserRepository userRepository) : base(userRepository)
+        {
+            _reservationRepository = reservationRepository;
+            _unitOfWork = unitOfWork;
+        }
 
         // GET: api/Reservations
+        
         [Route("")]
         public IQueryable<Reservation> GetReservations()
         {
-            return db.Reservations;
+            if(CurrentUser.Roles.Any(r => r.Role.Name == "HostelOwner"))
+            {
+                return _reservationRepository.Where(r => CurrentUser.Hostels.Any(h => h.HostelId == r.HostelId));
+            }
+            else
+            {
+                return _reservationRepository.Where(r => r.UserId == CurrentUser.Id);
+            }
         }
 
         // GET: api/Reservations/5
@@ -30,7 +42,21 @@ namespace AspNetIdentity.WebApi.Controllers
         [Route("{id:int}")]
         public IHttpActionResult GetReservation(int id)
         {
-            Reservation reservation = db.Reservations.Find(id);
+            Reservation reservation = _reservationRepository.GetById(id);
+            if (CurrentUser.Roles.Any(r => r.Role.Name == "HostelOwner"))
+            {
+                if (CurrentUser.Hostels.All(h => h.HostelId != reservation.HostelId))
+                {
+                    return NotFound();
+                }
+            } else
+            {
+                if (reservation.UserId != CurrentUser.Id)
+                {
+                    return NotFound();
+                }
+            }
+
             if (reservation == null)
             {
                 return NotFound();
@@ -51,16 +77,16 @@ namespace AspNetIdentity.WebApi.Controllers
 
             if (id != reservation.ReservationId)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            db.Entry(reservation).State = EntityState.Modified;
+            _reservationRepository.Update(reservation);
 
             try
             {
-                db.SaveChanges();
+                _unitOfWork.Commit();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
                 if (!ReservationExists(id))
                 {
@@ -85,8 +111,8 @@ namespace AspNetIdentity.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.Reservations.Add(reservation);
-            db.SaveChanges();
+            _reservationRepository.Add(reservation);
+            _unitOfWork.Commit();
 
             return CreatedAtRoute("DefaultApi", new { id = reservation.ReservationId }, reservation);
         }
@@ -96,30 +122,21 @@ namespace AspNetIdentity.WebApi.Controllers
         [Route("{id:int}")]
         public IHttpActionResult DeleteReservation(int id)
         {
-            Reservation reservation = db.Reservations.Find(id);
+            Reservation reservation = _reservationRepository.GetById(id);
             if (reservation == null)
             {
                 return NotFound();
             }
 
-            db.Reservations.Remove(reservation);
-            db.SaveChanges();
+            _reservationRepository.Delete(reservation);
+            _unitOfWork.Commit();
 
             return Ok(reservation);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
         private bool ReservationExists(int id)
         {
-            return db.Reservations.Count(e => e.ReservationId == id) > 0;
+            return _reservationRepository.Any(e => e.ReservationId == id);
         }
     }
 }

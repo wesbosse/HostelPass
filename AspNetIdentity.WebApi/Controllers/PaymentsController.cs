@@ -1,36 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using AspNetIdentity.Core.Domain;
+using AspNetIdentity.Core.Infrastructure;
+using AspNetIdentity.Core.Repository;
+using Microsoft.AspNet.Identity;
+using System;
 using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
-using AspNetIdentity.WebApi.Infrastructure;
-using AspNetIdentity.WebApi.Models;
-using Microsoft.AspNet.Identity;
 
 namespace AspNetIdentity.WebApi.Controllers
 {
     [RoutePrefix("api/payments")]
+    [Authorize]
     public class PaymentsController : BaseApiController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly IPaymentRepository _paymentRepository;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public PaymentsController(IPaymentRepository paymentRepository, IUnitOfWork unitOfWork, IHostLUserRepository userRepository) : base(userRepository) 
+        {
+            _paymentRepository = paymentRepository;
+            _unitOfWork = unitOfWork;
+        }
 
         // GET: api/Payments
-        [Authorize]
         [Route("")]
         public IQueryable<Payment> GetPayments()
         {
-            if (AppUserManager.IsInRole(CurrentUser.Id, "HostelOwner"))
+            if (CurrentUser.Roles.Any(r => r.Role.Name == "HostelOwner"))
             {
-                return db.Payments.Where(p => CurrentUser.Hostels.Any(h => h.HostelId == p.Reservation.HostelId));
+                return _paymentRepository.Where(p => CurrentUser.Hostels.Any(h => h.HostelId == p.Reservation.HostelId));
             }
-            if(AppUserManager.IsInRole(CurrentUser.Id, "Traveller"))
+            if(CurrentUser.Roles.Any(r => r.Role.Name == "Traveller"))
             {
-                return db.Payments.Where(p => p.Reservation.UserId == CurrentUser.Id);
+                return _paymentRepository.Where(p => p.Reservation.UserId == CurrentUser.Id);
             }
             return null;
         }
@@ -40,8 +44,8 @@ namespace AspNetIdentity.WebApi.Controllers
         [Route("{id:int}")]
         public IHttpActionResult GetPayment(int id)
         {
-            Payment payment = db.Payments.Find(id);
-            if (payment == null)
+            Payment payment = _paymentRepository.GetById(id);
+            if (payment == null || CurrentUser.Reservations.All(r => r.PaymentId != id))
             {
                 return NotFound();
             }
@@ -50,7 +54,7 @@ namespace AspNetIdentity.WebApi.Controllers
         }
 
         // PUT: api/Payments/5
-        [ResponseType(typeof(void))]
+        /*[ResponseType(typeof(void))]
         [Route("{id:int}")]
         public IHttpActionResult PutPayment(int id, Payment payment)
         {
@@ -64,13 +68,13 @@ namespace AspNetIdentity.WebApi.Controllers
                 return BadRequest();
             }
 
-            db.Entry(payment).State = EntityState.Modified;
+            _paymentRepository.Update(payment);
 
             try
             {
-                db.SaveChanges();
+                _unitOfWork.Commit();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
                 if (!PaymentExists(id))
                 {
@@ -83,7 +87,7 @@ namespace AspNetIdentity.WebApi.Controllers
             }
 
             return StatusCode(HttpStatusCode.NoContent);
-        }
+        }*/
 
         // POST: api/Payments
         [ResponseType(typeof(Payment))]
@@ -94,42 +98,37 @@ namespace AspNetIdentity.WebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
+            if (CurrentUser.Reservations.All(r => r.ReservationId != payment.ReservationId))
+            {
+                return BadRequest();
+            }
 
-            db.Payments.Add(payment);
-            db.SaveChanges();
+            _paymentRepository.Add(payment);
+            _unitOfWork.Commit();
 
             return CreatedAtRoute("DefaultApi", new { id = payment.PaymentId }, payment);
         }
 
-        // DELETE: api/Payments/5
+        /*// DELETE: api/Payments/5
         [ResponseType(typeof(Payment))]
         [Route("{id:int}")]
         public IHttpActionResult DeletePayment(int id)
         {
-            Payment payment = db.Payments.Find(id);
+            Payment payment = _paymentRepository.GetById(id);
             if (payment == null)
             {
                 return NotFound();
             }
 
-            db.Payments.Remove(payment);
-            db.SaveChanges();
+            _paymentRepository.Delete(payment);
+            _unitOfWork.Commit();
 
             return Ok(payment);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        }*/
 
         private bool PaymentExists(int id)
         {
-            return db.Payments.Count(e => e.PaymentId == id) > 0;
+            return _paymentRepository.Any(e => e.PaymentId == id);
         }
     }
 }

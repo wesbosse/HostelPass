@@ -1,28 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+﻿using AspNetIdentity.Core.Domain;
+using AspNetIdentity.Core.Infrastructure;
+using AspNetIdentity.Core.Repository;
+using System;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
-using AspNetIdentity.WebApi.Infrastructure;
-using AspNetIdentity.WebApi.Models;
 
 namespace AspNetIdentity.WebApi.Controllers
 {
     [RoutePrefix("api/ratings")]
-    public class RatingsController : ApiController
+    [Authorize]
+    public class RatingsController : BaseApiController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly IRatingRepository _ratingRepository;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public RatingsController(IRatingRepository ratingRepository, IUnitOfWork unitOfWork, IHostLUserRepository userRepository) : base(userRepository)
+        {
+            _ratingRepository = ratingRepository;
+            _unitOfWork = unitOfWork;
+        }
 
         // GET: api/Ratings
         [Route("")]
         public IQueryable<Rating> GetRatings()
         {
-            return db.Ratings;
+            return _ratingRepository.GetAll();
         }
 
         // GET: api/Ratings/5
@@ -30,7 +34,8 @@ namespace AspNetIdentity.WebApi.Controllers
         [Route("{id:int}")]
         public IHttpActionResult GetRating(int id)
         {
-            Rating rating = db.Ratings.Find(id);
+            Rating rating = _ratingRepository.GetById(id);
+
             if (rating == null)
             {
                 return NotFound();
@@ -40,7 +45,7 @@ namespace AspNetIdentity.WebApi.Controllers
         }
 
         // PUT: api/Ratings/5
-        [ResponseType(typeof(void))]
+        /*[ResponseType(typeof(void))]
         [Route("{id:int}")]
         public IHttpActionResult PutRating(int id, Rating rating)
         {
@@ -54,13 +59,13 @@ namespace AspNetIdentity.WebApi.Controllers
                 return BadRequest();
             }
 
-            db.Entry(rating).State = EntityState.Modified;
+            _ratingRepository.Update(rating);
 
             try
             {
-                db.SaveChanges();
+                _unitOfWork.Commit();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
                 if (!RatingExists(id))
                 {
@@ -73,7 +78,7 @@ namespace AspNetIdentity.WebApi.Controllers
             }
 
             return StatusCode(HttpStatusCode.NoContent);
-        }
+        }*/
 
         // POST: api/Ratings
         [ResponseType(typeof(Rating))]
@@ -85,41 +90,49 @@ namespace AspNetIdentity.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.Ratings.Add(rating);
-            db.SaveChanges();
+            if (CurrentUser.Roles.Any(r => r.Role.Name == "HostelOwner"))
+            {
+                // If none of the hostels reservations are ones made by the user being reviewed
+                if (CurrentUser.Reservations.All(reservation => reservation.UserId != rating.TravellerId))
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                // If none of the Travellers reservations are ones for the Hostel being reviewed
+                if (CurrentUser.Reservations.All(reservation => reservation.HostelId != rating.HostelId))
+                {
+                    return NotFound();
+                }
+            }
+
+            _ratingRepository.Add(rating);
+            _unitOfWork.Commit();
 
             return CreatedAtRoute("DefaultApi", new { id = rating.RatingId }, rating);
         }
 
         // DELETE: api/Ratings/5
-        [ResponseType(typeof(Rating))]
+        /*[ResponseType(typeof(Rating))]
         [Route("{id:int}")]
         public IHttpActionResult DeleteRating(int id)
         {
-            Rating rating = db.Ratings.Find(id);
+            Rating rating = _ratingRepository.GetById(id);
             if (rating == null)
             {
                 return NotFound();
             }
 
-            db.Ratings.Remove(rating);
-            db.SaveChanges();
+            _ratingRepository.Delete(rating);
+            _unitOfWork.Commit();
 
             return Ok(rating);
-        }
+        }*/
 
-        protected override void Dispose(bool disposing)
+/*        private bool RatingExists(int id)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool RatingExists(int id)
-        {
-            return db.Ratings.Count(e => e.RatingId == id) > 0;
-        }
+            return _ratingRepository.Any(e => e.RatingId == id);
+        }*/
     }
 }
