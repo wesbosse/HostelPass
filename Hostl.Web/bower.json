@@ -12,8 +12,10 @@
     "tests"
   ],
   "dependencies": {
+    "jquery": "^2.2.2",
     "angular": "^1.5.6",
     "bootstrap": "^3.3.6",
+
     "angular-local-storage": "^0.2.7",
     "angular-ui-router": "^0.3.0",
     "angular-toastr": "^1.7.0",
@@ -26,9 +28,17 @@
     "angular-touch": "^1.5.6",
     "angular-ui": "^0.4.0",
     "bootstrap-datepicker": "^1.6.1",
-    "bootstrap-select": "^1.10.0"
+    "bootstrap-select": "^1.10.0",
+    "spin.js": "^2.3.2",
+    "toastr": "^2.1.2",
+    "angular-route": "^1.5.6"
   },
-  "devDependencies": {
-    "jquery": "^3.0.0"
+  "overrides": {
+    "bootstrap": {
+      "main": [
+        "dist/css/bootstrap.css",
+        "dist/js/bootstrap.js"
+      ]
+    }
   }
 }
