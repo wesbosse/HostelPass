@@ -7,13 +7,13 @@ namespace AspNetIdentity.Data.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class updatedUserWithEmail : IMigrationMetadata
+    public sealed partial class InitialCreate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(updatedUserWithEmail));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201606100804296_updatedUserWithEmail"; }
+            get { return "201606101758008_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

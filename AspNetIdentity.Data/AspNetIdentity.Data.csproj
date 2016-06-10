@@ -61,13 +61,9 @@
     <Compile Include="Infrastructure\Repository.cs" />
     <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="Infrastructure\UserStore.cs" />
-    <Compile Include="Migrations\201606100307228_InitialCreate.cs" />
-    <Compile Include="Migrations\201606100307228_InitialCreate.Designer.cs">
-      <DependentUpon>201606100307228_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201606100804296_updatedUserWithEmail.cs" />
-    <Compile Include="Migrations\201606100804296_updatedUserWithEmail.Designer.cs">
-      <DependentUpon>201606100804296_updatedUserWithEmail.cs</DependentUpon>
+    <Compile Include="Migrations\201606101758008_InitialCreate.cs" />
+    <Compile Include="Migrations\201606101758008_InitialCreate.Designer.cs">
+      <DependentUpon>201606101758008_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -92,11 +88,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201606100307228_InitialCreate.resx">
-      <DependentUpon>201606100307228_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201606100804296_updatedUserWithEmail.resx">
-      <DependentUpon>201606100804296_updatedUserWithEmail.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201606101758008_InitialCreate.resx">
+      <DependentUpon>201606101758008_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
