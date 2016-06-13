@@ -52,9 +52,15 @@
                     function(response) {
                         localStorageService.set('authorizationData', response.data);
 
-                        state.isLoggedIn = true;
-
+                        /*if (response.data.hostelOwner == "True") {
+                            console.log(response.data.hostelOwner);
+                            $location.path('#/app/dashboard');
+                        }
+                        else {
+                            $location.path('#/travelerDash');
+                        }*/
                         defer.resolve(response.data);
+                        
 
                     },
                     function(err) {
@@ -68,7 +74,7 @@
             localStorageService.remove('authorizationData');
 
             state.isLoggedIn = false;
-
+            $location.path('')
             //$location.path('#/login');
         }
 
@@ -77,7 +83,12 @@
 
             if (authData) {
                 state.isLoggedIn = true;
-
+                if (authData.hostelOwner) {
+                    $location.path('#/app/dashboard');
+                }
+                else {
+                    $location.path('#/travelerDash');
+                }
                 //$location.path('#/posts');
             }
         }

@@ -11,7 +11,6 @@ using System.Web.Http.Description;
 
 namespace AspNetIdentity.WebApi.Controllers
 {
-    [RoutePrefix("api/payments")]
     [Authorize]
     public class PaymentsController : BaseApiController
     {
@@ -25,7 +24,6 @@ namespace AspNetIdentity.WebApi.Controllers
         }
 
         // GET: api/Payments
-        [Route("")]
         public IQueryable<Payment> GetPayments()
         {
             if (CurrentUser.Roles.Any(r => r.Role.Name == "HostelOwner"))
@@ -41,7 +39,6 @@ namespace AspNetIdentity.WebApi.Controllers
 
         // GET: api/Payments/5
         [ResponseType(typeof(Payment))]
-        [Route("{id:int}")]
         public IHttpActionResult GetPayment(int id)
         {
             Payment payment = _paymentRepository.GetById(id);
@@ -91,7 +88,6 @@ namespace AspNetIdentity.WebApi.Controllers
 
         // POST: api/Payments
         [ResponseType(typeof(Payment))]
-        [Route("")]
         public IHttpActionResult PostPayment(Payment payment)
         {
             if (!ModelState.IsValid)

@@ -57,10 +57,11 @@ namespace AspNetIdentity.WebApi.Providers
             {
                 { "username", user.UserName },
                 { "hostelOwner", user.HostelOwner.ToString() },
-                { "name", $"{user.FirstName} {user.LastName}" },
-                { "email", user.EmailAddress },
+                { "roles", user.Roles.Count.ToString() },
+/*                { "name", $"{user.FirstName} {user.LastName}" },
+/*                { "email", user.EmailAddress },#1#
                 { "messages", user.Messages.Count.ToString() },
-                { "rating", user.Ratings.Average(r => r.AverageRating).ToString() }                
+                { "rating", user.Ratings.Average(r => r.AverageRating).ToString() }  */              
             });
            
             var ticket = new AuthenticationTicket(token, authenticationProperties);

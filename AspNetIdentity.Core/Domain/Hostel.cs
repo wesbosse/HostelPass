@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Web;
 
 namespace AspNetIdentity.Core.Domain
@@ -20,6 +22,7 @@ namespace AspNetIdentity.Core.Domain
         public string Description { get; set; }
         public string Phone { get; set; }
         public decimal Price { get; set; }
+        public int Availability { get; set; }
 
         // Relationship fields
         public virtual ICollection<Reservation> Reservations { get; set; }

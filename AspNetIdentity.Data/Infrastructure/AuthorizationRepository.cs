@@ -34,7 +34,8 @@ namespace AspNetIdentity.Data.Infrastructure
                 LastName = registration.LastName,
                 JoinDate = DateTime.Now,
                 UserName = registration.Username,
-                HostelOwner = registration.HostelOwner
+                HostelOwner = registration.HostelOwner,
+                EmailAddress = registration.EmailAddress
             };
 
             var result = await _userManager.CreateAsync(user, registration.Password);
