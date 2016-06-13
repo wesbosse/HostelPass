@@ -10,7 +10,6 @@ using System.Web.Http.Description;
 
 namespace AspNetIdentity.WebApi.Controllers
 {
-    [RoutePrefix("api/hostlusers")]
     public class HostLUsersController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -23,7 +22,6 @@ namespace AspNetIdentity.WebApi.Controllers
         // PUT: api/HostLUsers/5
         [Authorize]
         [ResponseType(typeof(void))]
-        [Route("{id:int}")]
         public IHttpActionResult PutHostLUser(HostLUser hostLUser)
         {
             var id = CurrentUser.Id;

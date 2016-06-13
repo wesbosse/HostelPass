@@ -6,7 +6,6 @@ using System.Web.Http;
 
 namespace AspNetIdentity.WebApi.Controllers
 {
-    [RoutePrefix("api/accounts")]
     public class AccountsController : BaseApiController
     {
         private readonly IAuthorizationRepository _authorizationRepository;
@@ -17,7 +16,7 @@ namespace AspNetIdentity.WebApi.Controllers
         }
 
         [AllowAnonymous]
-        [Route("Create")]
+        [Route("api/accounts/Create")]
         public async Task<IHttpActionResult> RegisterUser(CreateUserBindingModel userModel)
         {
             if (!ModelState.IsValid)

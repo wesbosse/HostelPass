@@ -7,7 +7,6 @@ using System.Web.Http.Description;
 
 namespace AspNetIdentity.WebApi.Controllers
 {
-    [RoutePrefix("api/messages")]
     public class MessagesController : BaseApiController
     {
         private readonly IMessageRepository _messageRepository;
@@ -21,7 +20,6 @@ namespace AspNetIdentity.WebApi.Controllers
 
         // GET: api/Messages
         [Authorize]
-        [Route("")]
         public IQueryable<Message> GetMessages()
         {
             return _messageRepository.Where(h => h.UserId == CurrentUser.Id);
@@ -29,7 +27,6 @@ namespace AspNetIdentity.WebApi.Controllers
 
         // POST: api/Messages
         [Authorize]
-        [Route("")]
         [ResponseType(typeof(Message))]
         public IHttpActionResult PostMessage(Message message)
         {
@@ -47,7 +44,6 @@ namespace AspNetIdentity.WebApi.Controllers
         // DELETE: api/Messages/5
         [Authorize(Roles="Admin")]
         [ResponseType(typeof(Message))]
-        [Route("{id:int}")]
         public IHttpActionResult DeleteMessage(int id)
         {
             Message message = _messageRepository.GetById(id);

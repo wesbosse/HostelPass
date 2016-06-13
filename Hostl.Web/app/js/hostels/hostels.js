@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
     'use strict';
     var controllerId = 'hostelsCtrl';
     angular.module('app').controller(controllerId, ['common', hostels]);
@@ -16,5 +16,6 @@
             common.activateController([], controllerId)
                 .then(function () { log('Activated Hostels View'); });
         }
+
     }
 })();

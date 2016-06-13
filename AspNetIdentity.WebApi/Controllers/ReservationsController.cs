@@ -10,7 +10,6 @@ using System.Web.Http.Description;
 namespace AspNetIdentity.WebApi.Controllers
 {
     [Authorize]
-    [RoutePrefix("api/ratings")]
     public class ReservationsController : BaseApiController
     {
         private readonly IReservationRepository _reservationRepository;
@@ -24,7 +23,6 @@ namespace AspNetIdentity.WebApi.Controllers
 
         // GET: api/Reservations
         
-        [Route("")]
         public IQueryable<Reservation> GetReservations()
         {
             if(CurrentUser.Roles.Any(r => r.Role.Name == "HostelOwner"))
@@ -39,7 +37,6 @@ namespace AspNetIdentity.WebApi.Controllers
 
         // GET: api/Reservations/5
         [ResponseType(typeof(Reservation))]
-        [Route("{id:int}")]
         public IHttpActionResult GetReservation(int id)
         {
             Reservation reservation = _reservationRepository.GetById(id);
@@ -67,7 +64,6 @@ namespace AspNetIdentity.WebApi.Controllers
 
         // PUT: api/Reservations/5
         [ResponseType(typeof(void))]
-        [Route("{id:int}")]
         public IHttpActionResult PutReservation(int id, Reservation reservation)
         {
             if (!ModelState.IsValid)
@@ -103,7 +99,6 @@ namespace AspNetIdentity.WebApi.Controllers
 
         // POST: api/Reservations
         [ResponseType(typeof(Reservation))]
-        [Route("")]
         public IHttpActionResult PostReservation(Reservation reservation)
         {
             if (!ModelState.IsValid)
@@ -119,7 +114,6 @@ namespace AspNetIdentity.WebApi.Controllers
 
         // DELETE: api/Reservations/5
         [ResponseType(typeof(Reservation))]
-        [Route("{id:int}")]
         public IHttpActionResult DeleteReservation(int id)
         {
             Reservation reservation = _reservationRepository.GetById(id);

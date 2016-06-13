@@ -11,8 +11,6 @@ using System.Web.Http.Description;
 
 namespace AspNetIdentity.WebApi.Controllers
 {
-
-    [RoutePrefix("api/hostels")]
     public class HostelsController : BaseApiController
     {
         private readonly IHostelRepository _hostelRepository;
@@ -24,7 +22,6 @@ namespace AspNetIdentity.WebApi.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        [Route("")]
         [Authorize]
         public IQueryable<Hostel> GetManagedHostel()
         {
@@ -42,7 +39,6 @@ namespace AspNetIdentity.WebApi.Controllers
 
         // GET: api/Hostels/5
         [Authorize]
-        [Route("{id:int}")]
         [ResponseType(typeof(Hostel))]
         public IHttpActionResult GetHostel(int id)
         {
@@ -58,7 +54,6 @@ namespace AspNetIdentity.WebApi.Controllers
 
         // PUT: api/Hostels/5
         [Authorize(Roles = "HostelOwner")]
-        [Route("{id:int}")]
         [ResponseType(typeof(void))]
         public IHttpActionResult PutHostel(int id, Hostel hostel)
         {
@@ -93,7 +88,7 @@ namespace AspNetIdentity.WebApi.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        [Route("")]
+
         // POST: api/Hostels
         [Authorize(Roles = "HostelOwner")]
         [ResponseType(typeof(Hostel))]
@@ -113,7 +108,6 @@ namespace AspNetIdentity.WebApi.Controllers
 
         // DELETE: api/Hostels/5
         [Authorize(Roles = "HostelOwner")]
-        [Route("{id:int}")]
         [ResponseType(typeof(Hostel))]
         public IHttpActionResult DeleteHostel(int id)
         {

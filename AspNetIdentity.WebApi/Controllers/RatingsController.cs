@@ -9,7 +9,6 @@ using System.Web.Http.Description;
 
 namespace AspNetIdentity.WebApi.Controllers
 {
-    [RoutePrefix("api/ratings")]
     [Authorize]
     public class RatingsController : BaseApiController
     {
@@ -23,7 +22,6 @@ namespace AspNetIdentity.WebApi.Controllers
         }
 
         // GET: api/Ratings
-        [Route("")]
         public IQueryable<Rating> GetRatings()
         {
             return _ratingRepository.GetAll();
@@ -31,7 +29,6 @@ namespace AspNetIdentity.WebApi.Controllers
 
         // GET: api/Ratings/5
         [ResponseType(typeof(Rating))]
-        [Route("{id:int}")]
         public IHttpActionResult GetRating(int id)
         {
             Rating rating = _ratingRepository.GetById(id);
@@ -82,7 +79,6 @@ namespace AspNetIdentity.WebApi.Controllers
 
         // POST: api/Ratings
         [ResponseType(typeof(Rating))]
-        [Route("")]
         public IHttpActionResult PostRating(Rating rating)
         {
             if (!ModelState.IsValid)

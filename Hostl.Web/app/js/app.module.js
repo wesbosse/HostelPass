@@ -17,7 +17,7 @@
             
         ])
         .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
-            $urlRouterProvider.otherwise('landing');
+            $urlRouterProvider.otherwise('');
 
             $stateProvider
                 .state('app', {
@@ -60,10 +60,10 @@
                     controller:'listingsController as listings' 
                 })
                 .state('landing', { 
-                    url: '/landing', 
+                    url: '', 
                     templateUrl: '/templates/landing.html', 
                     controller: 'LandingController as landing' 
                 });
         }])
-        .value('apiUrl', 'http://hostL.azurewebsites.net/api/');
+        .value('apiUrl', 'http://localhost:59822/api/');
 })();

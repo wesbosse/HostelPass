@@ -9,7 +9,6 @@ using System.Web.Http.Description;
 
 namespace AspNetIdentity.WebApi.Controllers
 {
-    [RoutePrefix("api/amenities")]
     public class AmenitiesController : BaseApiController
     {
         private readonly IAmenityRepository _amenityRepository;
@@ -23,7 +22,6 @@ namespace AspNetIdentity.WebApi.Controllers
 
         // GET: api/Amenities
         [Authorize]
-        [Route("")]
         public IQueryable<Amenity> GetAmenities()
         {
             return _amenityRepository.GetAll();
@@ -89,7 +87,6 @@ namespace AspNetIdentity.WebApi.Controllers
         // POST: api/Amenities
         [Authorize(Roles = "HostelOwner")]
         [ResponseType(typeof(Amenity))]
-        [Route("")]
         public IHttpActionResult PostAmenity(Amenity amenity)
         {
             if (!ModelState.IsValid)

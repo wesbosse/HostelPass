@@ -25,9 +25,9 @@
                 size: modal.size
             });
 
-            modalInstance.result.then(function(success) {
-                window.location.replace('/#/landing');
-            });
+            /*modalInstance.result.then(function(success) {
+                window.location.replace('');
+            });*/
         };
     }
 
@@ -41,7 +41,7 @@
                 function(response) {
                      
                     $uibModalInstance.close(true);
-                    window.location.replace('/#/landing');
+                    window.location.replace('');
                    
                 },
                 function(message) {
@@ -59,7 +59,14 @@
             authService.login(username,password)
                 .then(
                     function(response) {
-                        window.location.replace('/#/travelerDash');
+                        if (response.hostelOwner == "True") {
+                            console.log(response.hostelOwner);
+                            window.location.replace('#/app/dashboard');
+                        }
+                        else {
+                            window.location.replace('#/travelerDash');
+                        }
+                        
                         $uibModalInstance.close(true);
                     },
                     function(message) {
