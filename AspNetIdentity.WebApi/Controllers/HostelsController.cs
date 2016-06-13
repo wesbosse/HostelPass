@@ -28,7 +28,7 @@ namespace AspNetIdentity.WebApi.Controllers
             return _hostelRepository.Where(h => h.UserId == CurrentUser.Id);
         }
 
-        [Route("search")]
+        [Route("api/hostels/search/{city}")]
         [Authorize]
         public IQueryable<Hostel> GetSearchedHostel(string city)
         {
