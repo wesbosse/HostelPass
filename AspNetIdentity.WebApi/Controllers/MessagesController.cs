@@ -1,4 +1,5 @@
-﻿using AspNetIdentity.Core.Domain;
+﻿using System;
+using AspNetIdentity.Core.Domain;
 using AspNetIdentity.Core.Infrastructure;
 using AspNetIdentity.Core.Repository;
 using System.Linq;
@@ -34,6 +35,9 @@ namespace AspNetIdentity.WebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            message.UserId = CurrentUser.Id;
+            message.CreatedDate = DateTime.Now;
 
             _messageRepository.Add(message);
             _unitOfWork.Commit();
