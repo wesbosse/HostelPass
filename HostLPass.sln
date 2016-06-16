@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HostLPass.API", "HostLPass.WebApi\HostLPass.API.csproj", "{FE46F959-09B9-4182-9AEC-E66364EFC1AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HostLPass.WebApi", "HostLPass.WebApi\HostLPass.WebApi.csproj", "{FE46F959-09B9-4182-9AEC-E66364EFC1AC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HostLPass.Core", "HostLPass.Core\HostLPass.Core.csproj", "{FDC0B983-A8C7-4689-A84C-D8752CF39011}"
 EndProject
