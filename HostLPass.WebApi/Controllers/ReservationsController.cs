@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
+using AspNetIdentity.Data.Repository;
 
 namespace HostLPass.WebApi.Controllers
 {
@@ -14,11 +15,15 @@ namespace HostLPass.WebApi.Controllers
     {
         private readonly IReservationRepository _reservationRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IHostelRepository _hostelRepository;
 
-        public ReservationsController(IReservationRepository reservationRepository, IUnitOfWork unitOfWork, IHostLUserRepository userRepository) : base(userRepository)
+        public ReservationsController(IReservationRepository reservationRepository, IHostelRepository hostelRepository,
+            IUnitOfWork unitOfWork, IHostLUserRepository userRepository) : base(userRepository)
         {
             _reservationRepository = reservationRepository;
+            _hostelRepository = hostelRepository;
             _unitOfWork = unitOfWork;
+            
         }
 
         // GET: api/Reservations
@@ -105,6 +110,11 @@ namespace HostLPass.WebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
+            reservation.UserId = CurrentUser.Id;
+            reservation.CreatedDate = DateTime.Now;
+            reservation.ConfirmedStatus = false;
+            reservation.TotalPaid = 0;
+            reservation.TotalCost = _hostelRepository.GetById(reservation.HostelId).Price;
 
             _reservationRepository.Add(reservation);
             _unitOfWork.Commit();
@@ -117,7 +127,7 @@ namespace HostLPass.WebApi.Controllers
         public IHttpActionResult DeleteReservation(int id)
         {
             Reservation reservation = _reservationRepository.GetById(id);
-            if (reservation == null)
+            if (reservation == null || reservation.Traveller.Id != CurrentUser.Id)
             {
                 return NotFound();
             }

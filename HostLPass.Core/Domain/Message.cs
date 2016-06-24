@@ -13,7 +13,7 @@ namespace HostLPass.Core.Domain
         public int ReservationId { get; set; }
 
         // Fields relevant to Message
-        public string Subject { get; set; }
+        /*public string Subject { get; set; }*/
         public string Text { get; set; }
         public DateTime CreatedDate { get; set; }
 

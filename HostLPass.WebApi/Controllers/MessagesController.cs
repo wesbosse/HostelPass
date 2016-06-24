@@ -1,6 +1,10 @@
+
 ﻿using HostLPass.Core.Domain;
 using HostLPass.Core.Infrastructure;
 using HostLPass.Core.Repository;
+
+﻿using System;
+
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -34,6 +38,9 @@ namespace HostLPass.WebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            message.UserId = CurrentUser.Id;
+            message.CreatedDate = DateTime.Now;
 
             _messageRepository.Add(message);
             _unitOfWork.Commit();

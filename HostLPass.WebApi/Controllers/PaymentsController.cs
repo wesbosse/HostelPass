@@ -42,10 +42,11 @@ namespace HostLPass.WebApi.Controllers
         public IHttpActionResult GetPayment(int id)
         {
             Payment payment = _paymentRepository.GetById(id);
-            if (payment == null || CurrentUser.Reservations.All(r => r.PaymentId != id))
+            //TODO: Correct this logic
+            /*if (payment == null || CurrentUser.Reservations.All(r => r.PaymentId != id))
             {
                 return NotFound();
-            }
+            }*/
 
             return Ok(payment);
         }

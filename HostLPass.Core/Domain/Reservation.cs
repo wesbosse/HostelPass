@@ -12,7 +12,6 @@ namespace HostLPass.Core.Domain
         public int ReservationId { get; set; }
         public int? UserId { get; set; }
         public int HostelId { get; set; }
-        public int PaymentId { get; set; }
 
         // Fields relevant to Reservation 
         public DateTime CreatedDate { get; set; }

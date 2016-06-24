@@ -27,62 +27,7 @@ namespace HostLPass.WebApi.Controllers
             return _amenityRepository.GetAll();
         }
 
-        // GET: api/Amenities/5
-        /*[Authorize]
-        [ResponseType(typeof(Amenity))]
-        [Route("{id:int}")]
-        public IHttpActionResult GetAmenity(int id)
-        {
-            Amenity amenity = _amenityRepository.GetById(id);
-
-            if (amenity == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(amenity);
-        }*/
-
-        // PUT: api/Amenities/5
-        /*[Authorize(Roles = "HostelOwner")]
-        [ResponseType(typeof(void))]
-        [Route("{id:int}")]
-        public IHttpActionResult PutAmenity(int id, Amenity amenity)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (amenity.Hostels.)
-            {
-                return BadRequest();
-            }
-            if (id != amenity.AmenityId)
-            {
-                return BadRequest();
-            }
-
-            _amenityRepository.Update(amenity);
-
-            try
-            {
-                _unitOfWork.Commit();
-            }
-            catch (Exception)
-            {
-                if (!AmenityExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }*/
+        
 
         // POST: api/Amenities
         [Authorize(Roles = "HostelOwner")]
@@ -99,23 +44,7 @@ namespace HostLPass.WebApi.Controllers
             return CreatedAtRoute("DefaultApi", new { id = amenity.AmenityId }, amenity);
         }
 
-        // DELETE: api/Amenities/5
-        /*[Authorize(Roles = "HostelOwner")]
-        [ResponseType(typeof(Amenity))]
-        [Route("{id:int}")]
-        public IHttpActionResult DeleteAmenity(int id)
-        {
-            Amenity amenity = _amenityRepository.GetById(id);
-            if (amenity == null)
-            {
-                return NotFound();
-            }
-
-            _amenityRepository.Delete(amenity);
-            _unitOfWork.Commit();
-
-            return Ok(amenity);
-        }*/
+     
 
         private bool AmenityExists(int id)
         {

@@ -41,41 +41,7 @@ namespace HostLPass.WebApi.Controllers
             return Ok(rating);
         }
 
-        // PUT: api/Ratings/5
-        /*[ResponseType(typeof(void))]
-        [Route("{id:int}")]
-        public IHttpActionResult PutRating(int id, Rating rating)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != rating.RatingId)
-            {
-                return BadRequest();
-            }
-
-            _ratingRepository.Update(rating);
-
-            try
-            {
-                _unitOfWork.Commit();
-            }
-            catch (Exception)
-            {
-                if (!RatingExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }*/
+        
 
         // POST: api/Ratings
         [ResponseType(typeof(Rating))]
@@ -109,26 +75,6 @@ namespace HostLPass.WebApi.Controllers
             return CreatedAtRoute("DefaultApi", new { id = rating.RatingId }, rating);
         }
 
-        // DELETE: api/Ratings/5
-        /*[ResponseType(typeof(Rating))]
-        [Route("{id:int}")]
-        public IHttpActionResult DeleteRating(int id)
-        {
-            Rating rating = _ratingRepository.GetById(id);
-            if (rating == null)
-            {
-                return NotFound();
-            }
-
-            _ratingRepository.Delete(rating);
-            _unitOfWork.Commit();
-
-            return Ok(rating);
-        }*/
-
-/*        private bool RatingExists(int id)
-        {
-            return _ratingRepository.Any(e => e.RatingId == id);
-        }*/
+        
     }
 }
